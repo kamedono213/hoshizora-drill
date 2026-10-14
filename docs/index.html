@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a1024">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ほしぞらドリル">
+<style>:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); } body { margin: 0; }</style>
+<title>ほしぞらドリル</title>
+<meta name="description" content="天文宇宙検定4級の範囲をくり返し学べる、オリジナル問題のクイズ(非公式)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+/* レイアウト: 夜空の一枚。ホームは「章ごとの星座」が並ぶ星図、出題は1カラムのカード。夜の観察画面なので暗い配色で固定する */
+:root {
+  --bg: #0a1024;          /* 夜空の紺 */
+  --bg2: #111a38;
+  --card: #16214a;
+  --ink: #eef1ff;
+  --sub: #a9b3d9;
+  --line: #2a3768;
+  --star: #ffd96a;        /* 星の黄 */
+  --accent: #7fd0ff;      /* 天の川の水色 */
+  --accent-ink: #081022;
+  --ok: #5fe0a0;
+  --ng: #ff7a8a;
+  --display: "M PLUS Rounded 1c", "Hiragino Maru Gothic ProN", "Yu Gothic", sans-serif;
+  --body: "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+  --r: 14px;
+  color-scheme: dark;
+}
+[hidden] { display: none !important; }
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; }
+body { background: radial-gradient(120% 70% at 50% 0%, var(--bg2), var(--bg) 60%) fixed, var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.65; -webkit-tap-highlight-color: transparent; }
+#app { max-width: 640px; margin: 0 auto; padding-inline: 16px; padding-block: 14px 40px; display: flex; flex-direction: column; gap: 16px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 800; margin: 0; text-wrap: balance; }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.muted { color: var(--sub); }
+.small { font-size: 13px; }
+.num { font-variant-numeric: tabular-nums; }
+.bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.link { background: none; border: 0; color: var(--accent); padding: 8px 0; font-weight: 700; }
+.link.sound { font-size: 13px; font-weight: 500; color: var(--sub); white-space: nowrap; }
+
+/* ---- ホーム */
+.mast { display: grid; gap: 2px; }
+.mast .eyebrow { font-size: 12px; letter-spacing: .14em; color: var(--sub); }
+.mast h1 { font-size: clamp(34px, 10vw, 52px); line-height: 1.1; letter-spacing: .02em; }
+.mast h1 span { color: var(--star); }
+.rank { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: var(--r); background: linear-gradient(135deg, #1b2a5e, #141e44); border: 1px solid var(--line); }
+.rank .title { font-family: var(--display); font-size: 20px; font-weight: 800; color: var(--star); }
+.rank .meter { flex: 1; min-width: 0; }
+.track { height: 8px; border-radius: 4px; background: #0b1330; overflow: hidden; }
+.track > i { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--star)); }
+.mission { display: grid; gap: 6px; text-align: left; padding: 18px; border-radius: var(--r); border: 0; background: var(--star); color: #2a1c00; }
+.mission b { font-family: var(--display); font-size: 22px; }
+.mission span { font-size: 14px; }
+.menu { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.menu button { text-align: left; padding: 14px; border-radius: var(--r); border: 1px solid var(--line); background: var(--card); display: grid; gap: 2px; min-width: 0; }
+.menu b { font-size: 16px; }
+.menu span { font-size: 12px; color: var(--sub); }
+.sky-h { display: flex; justify-content: space-between; align-items: baseline; }
+.skymap { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+.cst { border: 1px solid var(--line); background: rgba(10,16,36,.6); border-radius: var(--r); padding: 8px 8px 10px; display: grid; gap: 4px; text-align: left; min-width: 0; }
+.cst svg { width: 100%; height: auto; display: block; }
+.cst b { font-size: 13px; }
+.cst span { font-size: 11px; color: var(--sub); }
+.streak { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; color: var(--sub); }
+.streak b { color: var(--ink); font-size: 16px; }
+.note { font-size: 12px; color: var(--sub); border-top: 1px solid var(--line); padding-top: 12px; margin: 0; }
+
+/* ---- 章の一覧・設定 */
+.list { display: grid; gap: 10px; }
+.row { display: grid; grid-template-columns: 44px 1fr auto; gap: 12px; align-items: center; text-align: left; padding: 12px 14px; border-radius: var(--r); border: 1px solid var(--line); background: var(--card); }
+.row .no { font-family: var(--display); font-weight: 800; font-size: 22px; color: var(--star); text-align: center; }
+.row .meta { min-width: 0; display: grid; gap: 4px; }
+.row .meta span { font-size: 12px; color: var(--sub); }
+.row .go { font-size: 13px; color: var(--accent); white-space: nowrap; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { border: 1px solid var(--line); background: var(--card); border-radius: 999px; padding: 8px 14px; }
+.chip[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.primary { background: var(--accent); color: var(--accent-ink); border: 0; border-radius: var(--r); padding: 14px 18px; font-weight: 700; font-size: 17px; width: 100%; }
+.primary:disabled { opacity: .45; cursor: default; }
+.secondary { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 12px 16px; font-weight: 700; width: 100%; }
+.danger { color: var(--ng); }
+.panel { background: var(--card); border: 1px solid var(--line); border-radius: var(--r); padding: 16px; display: grid; gap: 10px; }
+.panel p { margin: 0; }
+
+/* ---- 出題 */
+.progress { display: grid; gap: 6px; }
+.tag { display: inline-block; font-size: 12px; color: var(--accent); border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; justify-self: start; }
+.qcard { display: grid; gap: 14px; }
+.qtext { font-size: 19px; font-weight: 700; line-height: 1.6; margin: 0; }
+.fig { background: #050a1a; border: 1px solid var(--line); border-radius: var(--r); display: grid; place-items: center; padding: 6px; }
+.fig svg { width: 100%; max-width: 380px; height: auto; display: block; }
+.choices { display: grid; gap: 10px; }
+.choice { border: 1px solid var(--line); background: var(--card); border-radius: var(--r); padding: 14px 16px; text-align: left; font-size: 17px; min-width: 0; display: grid; grid-template-columns: 28px 1fr; gap: 10px; align-items: start; }
+.choice i { font-style: normal; font-family: var(--display); font-weight: 800; color: var(--sub); }
+.choice.sel { border-color: var(--accent); box-shadow: inset 0 0 0 2px var(--accent); }
+.choice.ok { border-color: var(--ok); box-shadow: inset 0 0 0 2px var(--ok); }
+.choice.ng { border-color: var(--ng); box-shadow: inset 0 0 0 2px var(--ng); }
+.choice:disabled { cursor: default; color: var(--ink); }
+.verdict { border-radius: var(--r); padding: 14px 16px; display: grid; gap: 6px; background: var(--card); border: 1px solid var(--line); }
+.verdict b { font-family: var(--display); font-size: 20px; }
+.verdict.ok b { color: var(--ok); } .verdict.ng b { color: var(--ng); }
+.verdict p { margin: 0; }
+.stack { display: grid; gap: 10px; }
+.timer { font-family: var(--display); font-size: 18px; color: var(--star); }
+.timer.low { color: var(--ng); }
+.navrow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* ---- 結果 */
+.score { display: grid; justify-items: center; gap: 2px; padding-block: 8px; }
+.score .big { font-family: var(--display); font-size: 64px; font-weight: 800; line-height: 1; }
+.pass { font-family: var(--display); font-size: 22px; font-weight: 800; }
+.pass.ok { color: var(--ok); } .pass.ng { color: var(--ng); }
+.chbars { display: grid; gap: 8px; }
+.chbar { display: grid; grid-template-columns: 7.5em 1fr 3.4em; gap: 8px; align-items: center; font-size: 13px; }
+.chbar .track { height: 10px; }
+details.miss { border: 1px solid var(--line); border-radius: var(--r); background: var(--card); padding: 10px 14px; }
+details.miss summary { cursor: pointer; font-weight: 700; }
+details.miss p { margin: 8px 0 0; font-size: 14px; }
+.loading { text-align: center; color: var(--sub); padding: 60px 0; }
+@media (prefers-reduced-motion: no-preference) { .twinkle { animation: tw 2.4s ease-in-out infinite; } @keyframes tw { 50% { opacity: .55; } } }
+</style>
+</head>
+<body>
+<div id="app"><p class="loading">星空を準備しています…</p></div>
+<script src="app.js"></script>
+<script>
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+</script>
+</body>
+</html>

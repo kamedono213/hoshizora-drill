@@ -27,3 +27,7 @@
 - `node tools/make-icons.js` … アイコン
 - `node tools/build-pages.js` … `docs/` にPWA版(GitHub Pages用)
 - `node serve.js docs` … http://localhost:5391 で確認
+
+## 公開
+- PWA版(GitHub Pages): https://kamedono213.github.io/hoshizora-drill/ … `node tools/build-pages.js` で docs/ を作り直して push すると更新される
+- Artifact版: https://claude.ai/artifact/SzMAu9gSff8kcPydpxKoCA

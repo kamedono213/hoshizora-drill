@@ -196,6 +196,7 @@ function renderHome() {
         return `<button class="cst" data-ch="${i}">${constSVG([c.star], { lit: Math.round(r * n), w: 200, h: 140, pad: 14, label: c.name + 'の星座' })}<b>${i}章 ${c.short}</b><span class="num">${Math.round(r * 100)}%(${list.filter(q => learned(q.id)).length}/${list.length}問)</span></button>`;
       }).join('')}</div>
     </section>
+    <a class="shop" href="https://kentei-drill.booth.pm/items/9031724" target="_blank" rel="noopener"><b>紙で解きたい人へ: 印刷できる問題集(PDF)</b><span>この299問を、解説つきの問題集にまとめました(BOOTH・500円)</span></a>
     <p class="note">問題はすべてオリジナルです(公式の過去問ではありません)。範囲は公式テキスト《4級 星博士ジュニア》2025〜2026年版の章立てに合わせています。本番は4択・40問・50分、100点満点の60点以上で合格です(2026年10月時点の公式案内)。星座の線はd3-celestial(BSD-3ライセンス)のデータを使っています。</p>`;
   bindSound();
   app.querySelector('#mission').onclick = () => startQuiz('mission', buildMission());
@@ -308,7 +309,8 @@ function renderDone() {
     <div class="stack">
       ${S.mode === 'chapter' ? '<button class="primary" id="again">この章をもう10問</button>' : '<button class="primary" id="again">もう10問</button>'}
       <button class="secondary" id="home">ホームへ</button>
-    </div>`;
+    </div>
+    <a class="shop" href="https://kentei-drill.booth.pm/items/9031724" target="_blank" rel="noopener"><b>紙で解きたい人へ: 印刷できる問題集(PDF)</b><span>この299問を、解説つきの問題集にまとめました(BOOTH・500円)</span></a>`;
   app.querySelector('#home').onclick = () => go('home');
   app.querySelector('#again').onclick = () => S.mode === 'chapter' ? startQuiz('chapter', buildChapter(S.ch, 10), { ch: S.ch }) : S.mode === 'weak' ? (buildWeak().length ? startQuiz('weak', buildWeak()) : go('home')) : startQuiz('mission', buildMission());
 }
